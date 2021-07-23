@@ -1,21 +1,16 @@
-import { Card, Container, Row } from "react-bootstrap"
+import SidebarMenu from "./SidebarMenu";
 
-const Content = ({title, children}) => {
+const Content = ({children}) => {
 	return (
-		<div style={{marginLeft:"270px", marginTop:"25px", marginRight:"25px"}}>
-			<Container>
-				<Row>
-					<div>
-					<Card >
-						<Card.Header style={{fontSize:"1.25em"}}>{title}</Card.Header>
-						<Card.Body>
-							{children}
-						</Card.Body>
-					</Card>
-					</div>
-				</Row>
-			</Container>
-		</div>
+		<div>
+			<div className="inner-wrapper">
+					<SidebarMenu/>
+
+					<section role="main" className="content-body">
+						{children}
+					</section>
+				</div>
+		</div>												
 	)
 }
 

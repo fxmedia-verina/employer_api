@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import axios from 'axios';
+import { useEffect } from "react";
+import { useState } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { useHistory, useParams } from "react-router-dom";
 import Content from "./Content";
-import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import TitleBar from "./TitleBar";
+import axios from "axios";
 
-const AddEmployee = () => {
+const EditEmployee = () => {
 	let history = useHistory();
+	const { id } = useParams();
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [phone, setPhone] = useState("");
@@ -26,23 +28,35 @@ const AddEmployee = () => {
 		e.preventDefault();
 		try {
 			if (phone.length < 11) {
-				let return_msg = await axios.post('/api/employees', {name, email, phone});
-				setMessage("Employee has been successfully added !");
+				const { data } = await axios.put('/api/employees/'+id, {name, email, phone});
+				setMessage("Employee has been successfully edited !");
 			} else {
 				setMessage("Phone number length must not be over than 11 number !");
 			}
-		} catch(error) {
+		} catch(error){
 			setError("Problem with adding new employee !");
 		}
+		
 	};
 
 	useEffect(() => {
 		setMessage("");
 	}, [phone]);
 
+	useEffect(() => {
+		const fetching = async () => {
+			const { data } = await axios.get('/api/employees/'+id);
+			setName(data.name);
+			setEmail(data.email);
+			setPhone(data.phone);
+		};
+	  
+		fetching();
+	}, [])
+	
 	return (
 		<Content>
-			<TitleBar judul="Add New Employee" />
+			<TitleBar judul="Edit Employee" />
 			<div className="row">
 				<div className="col-xs-12">
 					{
@@ -64,7 +78,7 @@ const AddEmployee = () => {
 								<a href="#" className="fa fa-times"></a>
 							</div>
 			
-							<h2 className="panel-title">Add New Employee</h2>
+							<h2 className="panel-title">Edit Employee</h2>
 						</header>
 						<div className="panel-body">
 							<Form style={{paddingRight:"4em"}} onSubmit={submitHandler}>
@@ -103,4 +117,4 @@ const AddEmployee = () => {
 	)
 }
 
-export default AddEmployee
+export default EditEmployee
